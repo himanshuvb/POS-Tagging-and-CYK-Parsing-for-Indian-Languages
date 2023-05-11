@@ -20,7 +20,7 @@ def max_connect(x, y, viterbi_matrix, emission, transmission_matrix):
 	max = -99999
 	path = -1
 	
-	for k in xrange(len(tags)):
+	for k in range(len(tags)):
 		val = viterbi_matrix[k][x-1] * transmission_matrix[k][y]
 		if val * emission > max:
 			max = val
@@ -52,10 +52,10 @@ def main(language, test_file_path):
 	wordtypes = []
 	tagscount = []
 
-	for x in xrange(len(tags)):
+	for x in range(len(tags)):
 		tagscount.append(0)
 
-	for x in xrange(len(file_contents)):
+	for x in range(len(file_contents)):
 		line = file_contents.pop(0).strip().split(' ')
 		for i, word in enumerate(line):
 			if i == 0:
@@ -69,14 +69,14 @@ def main(language, test_file_path):
 	emission_matrix = []
 	transmission_matrix = []
 			
-	for x in xrange(len(tags)):
+	for x in range(len(tags)):
 		emission_matrix.append([])
-		for y in xrange(len(wordtypes)):
+		for y in range(len(wordtypes)):
 			emission_matrix[x].append(0)
 
-	for x in xrange(len(tags)):
+	for x in range(len(tags)):
 		transmission_matrix.append([])
-		for y in xrange(len(tags)):
+		for y in range(len(tags)):
 			transmission_matrix[x].append(0)
 
 
@@ -84,7 +84,7 @@ def main(language, test_file_path):
 	file_contents = f.readlines()
 
 	row_id = -1
-	for x in xrange(len(file_contents)):
+	for x in range(len(file_contents)):
 		line = file_contents.pop(0).strip().split(' ')
 
 		if line[0] not in exclude and len(line) >= 2:
@@ -97,13 +97,13 @@ def main(language, test_file_path):
 		else:
 			row_id = -1
 					
-	for x in xrange(len(tags)):
-		for y in xrange(len(wordtypes)):
+	for x in range(len(tags)):
+		for y in range(len(wordtypes)):
 			if tagscount[x] != 0:
 				emission_matrix[x][y] = float(emission_matrix[x][y]) / tagscount[x]
 
-	for x in xrange(len(tags)):
-		for y in xrange(len(tags)):
+	for x in range(len(tags)):
+		for y in range(len(tags)):
 			if tagscount[x] != 0:
 				transmission_matrix[x][y] = float(transmission_matrix[x][y]) / tagscount[x]
 
@@ -117,7 +117,7 @@ def main(language, test_file_path):
 	file_output = codecs.open("./output/"+ languages[int(sys.argv[1])] +"_tags_unsupervised.txt", 'w', 'utf-8')
 	file_output.close()
 
-	for j in xrange(len(test_input)):
+	for j in range(len(test_input)):
 		
 		test_words = []
 		pos_tags = []
@@ -131,15 +131,15 @@ def main(language, test_file_path):
 		viterbi_matrix = []
 		viterbi_path = []
 		
-		for x in xrange(len(tags)):
+		for x in range(len(tags)):
 			viterbi_matrix.append([])
 			viterbi_path.append([])
-			for y in xrange(len(test_words)):
+			for y in range(len(test_words)):
 				viterbi_matrix[x].append(0)
 				viterbi_path[x].append(0)
 
-		for x in xrange(len(test_words)):
-			for y in xrange(len(tags)):
+		for x in range(len(test_words)):
+			for y in range(len(tags)):
 				if test_words[x] in wordtypes:
 					word_index = wordtypes.index(test_words[x])
 					tag_index = tags.index(tags[y])
@@ -155,7 +155,7 @@ def main(language, test_file_path):
 
 		maxval = -999999
 		maxs = -1
-		for x in xrange(len(tags)):
+		for x in range(len(tags)):
 			if viterbi_matrix[x][len(test_words)-1] > maxval:
 				maxval = viterbi_matrix[x][len(test_words)-1]
 				maxs = x
@@ -175,4 +175,4 @@ def main(language, test_file_path):
 	file_output.close()
 	file_test.close()
 
-	print "Kindly check ./output/" + languages[int(sys.argv[1])] + "_tags_unsupervised.txt file for POS tags."
+	print ("Kindly check ./output/" + languages[int(sys.argv[1])] + "_tags_unsupervised.txt file for POS tags.")

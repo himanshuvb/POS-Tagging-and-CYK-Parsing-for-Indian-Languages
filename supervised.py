@@ -16,7 +16,7 @@ def max_connect(x, y, viterbi_matrix, emission, transmission_matrix):
 	max = -99999
 	path = -1
 	
-	for k in xrange(len(tags)):
+	for k in range(len(tags)):
 		val = viterbi_matrix[k][x-1] * transmission_matrix[k][y]
 		if val * emission > max:
 			max = val
@@ -56,11 +56,11 @@ def main():
 	file_contents = f.readlines()
 
 	# Initialize count of each tag to Zero's
-	for x in xrange(len(tags)):
+	for x in range(len(tags)):
 		tagscount.append(0)
 
 	# Calculate count of each tag in the training corpus and also the wordtypes in the corpus
-	for x in xrange(len(file_contents)):
+	for x in range(len(file_contents)):
 		line = file_contents.pop(0).strip().split(' ')
 		for i, word in enumerate(line):
 			if i == 0:
@@ -76,15 +76,15 @@ def main():
 	transmission_matrix = []
 		
 	# Initialize emission matrix
-	for x in xrange(len(tags)):
+	for x in range(len(tags)):
 		emission_matrix.append([])
-		for y in xrange(len(wordtypes)):
+		for y in range(len(wordtypes)):
 			emission_matrix[x].append(0)
 
 	# Initialize transmission matrix
-	for x in xrange(len(tags)):
+	for x in range(len(tags)):
 		transmission_matrix.append([])
-		for y in xrange(len(tags)):
+		for y in range(len(tags)):
 			transmission_matrix[x].append(0)
 
 	# Open training file to update emission and transmission matrix
@@ -93,7 +93,7 @@ def main():
 
 	# Update emission and transmission matrix with appropriate counts
 	row_id = -1
-	for x in xrange(len(file_contents)):
+	for x in range(len(file_contents)):
 		line = file_contents.pop(0).strip().split(' ')
 		
 		if line[0] not in exclude:
@@ -107,18 +107,18 @@ def main():
 			row_id = -1
 	
 	# Divide each entry in emission matrix by appropriate tag count to store probabilities in each entry instead of just count
-	for x in xrange(len(tags)):
-		for y in xrange(len(wordtypes)):
+	for x in range(len(tags)):
+		for y in range(len(wordtypes)):
 			if tagscount[x] != 0:
 				emission_matrix[x][y] = float(emission_matrix[x][y]) / tagscount[x]
 
 	# Divide each entry in transmission matrix by appropriate tag count to store probabilities in each entry instead of just count
-	for x in xrange(len(tags)):
-		for y in xrange(len(tags)):
+	for x in range(len(tags)):
+		for y in range(len(tags)):
 			if tagscount[x] != 0:
 				transmission_matrix[x][y] = float(transmission_matrix[x][y]) / tagscount[x]
 
-	print time.time() - start_time, "seconds for training"
+	print( time.time() - start_time, "seconds for training")
 
 	#--------------------------------------------------------------------------
 	# End of Training Phase
@@ -144,7 +144,7 @@ def main():
 	file_output.close()
 
 	# For each line POS tags are computed
-	for j in xrange(len(test_input)):
+	for j in range(len(test_input)):
 		
 		test_words = []
 		pos_tags = []
@@ -159,16 +159,16 @@ def main():
 		viterbi_path = []
 		
 		# Initialize viterbi matrix of size |tags| * |no of words in test sentence|
-		for x in xrange(len(tags)):
+		for x in range(len(tags)):
 			viterbi_matrix.append([])
 			viterbi_path.append([])
-			for y in xrange(len(test_words)):
+			for y in range(len(test_words)):
 				viterbi_matrix[x].append(0)
 				viterbi_path[x].append(0)
 
 		# Update viterbi matrix column wise
-		for x in xrange(len(test_words)):
-			for y in xrange(len(tags)):
+		for x in range(len(test_words)):
+			for y in range(len(tags)):
 				if test_words[x] in wordtypes:
 					word_index = wordtypes.index(test_words[x])
 					tag_index = tags.index(tags[y])
@@ -185,7 +185,7 @@ def main():
 		# Identify the max probability in last column i.e. best tag for last word in test sentence
 		maxval = -999999
 		maxs = -1
-		for x in xrange(len(tags)):
+		for x in range(len(tags)):
 			if viterbi_matrix[x][len(test_words)-1] > maxval:
 				maxval = viterbi_matrix[x][len(test_words)-1]
 				maxs = x
@@ -208,9 +208,9 @@ def main():
 	file_output.close()
 	file_test.close()
 
-	print time.time() - start_time, "seconds for testing 100 Sentences"
+	print (time.time() - start_time, "seconds for testing 100 Sentences")
 
-	print "\nKindly check ./output/" + languages[int(sys.argv[1])] + "_tags.txt file for POS tags."
+	print ("\nKindly check ./output/" + languages[int(sys.argv[1])] + "_tags.txt file for POS tags.")
 
 #--------------------------------------------------------------------------
 # Execution begins here
@@ -231,9 +231,8 @@ if __name__ == "__main__":
 		if len(sys.argv) == 3:
 			main()
 		else:
-			print "Usage: python supervised.py <language> <test_file_path>"
-			print "Example: python supervised.py 0 ./data/hindi_testing.txt"
-			print "More Info: Check ./Readme - Supervised.txt for detailed information"
+			print ("Usage: python supervised.py <language> <test_file_path>")
+			print ("Example: python supervised.py 0 ./data/hindi_testing.txt")
 
 	except ImportError as error:
-		print "Couldn't find the module - {0}, kindly install before proceeding.".format(error.message[16:])
+		print ("Couldn't find the module - {0}, kindly install before proceeding.".format(error.message[16:]))
